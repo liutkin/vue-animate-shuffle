@@ -1,12 +1,19 @@
 <template>
-<component :is="tag">
-  <span
-    v-for="(symbol, index) in renderedSymbols.split('')"
-    :key="index"
-    :class="index < symbolAnimationIndex ? [symbolAnimationCompleteClass, symbolClass] : symbolClass"
-    v-text="symbol"
-  />
-</component>
+  <component :is="containerElementTag">
+    <slot v-if="isAnimationDelayActive" />
+    <component
+      v-else
+      :is="charElementTag"
+      v-for="(char, index) in renderedChars.split('')"
+      :key="index"
+      :class="
+        index < charAnimationIndex
+          ? [charAnimationCompleteClass, charClass]
+          : charClass
+      "
+      v-text="char"
+    />
+  </component>
 </template>
 
 <script>
@@ -15,80 +22,113 @@ export default {
   name: "AnimateShuffle",
   props: {
     // String for being animated
-    stringToAnimate: {
+    animationString: {
       type: String,
       required: true,
       default: "",
     },
 
-    // Pool of symbols for animation tick
-    symbolsPool: {
+    // Pool of chars for animation tick
+    charsPool: {
       type: Array,
       required: true,
       default: () => [],
-      validator: symbols => symbols.every(symbol => typeof symbol === "string"),
+      validator: chars => chars.every(char => typeof char === "string"),
     },
 
-    // Delay before animation tick for every symbol
-    symbolUpdateDelay: {
+    // Delay before animation tick for every char
+    charUpdateDelay: {
       type: Number,
       default: 50,
     },
 
-    // Animation duration for every symbol
-    symbolAnimationDuration: {
+    // Animation duration for every char
+    charAnimationDuration: {
       type: Number,
       default: 1000,
     },
 
-    // Tag for the root element
-    tag: {
+    // Delay before initial render
+    startingAnimationDelay: {
+      type: Number,
+      default: 0,
+    },
+
+    // Tag for the container element
+    containerElementTag: {
       type: String,
       default: "div",
     },
 
-    // Class that being added upon symbol animation complete
-    symbolAnimationCompleteClass: {
+    // Tag for char element
+    charElementTag: {
+      type: String,
+      default: "span",
+    },
+
+    // Class that being added upon char animation complete
+    charAnimationCompleteClass: {
       type: String,
       default: "",
     },
 
-    // Class for every symbol element
-    symbolClass: {
+    // Class for every char element
+    charClass: {
       type: String,
       default: "",
     },
   },
   data: () => ({
-    renderedSymbols: "",
-    symbolAnimationIndex: null,
-    symbolTimestamp: null,
+    renderedChars: "",
+    charAnimationIndex: null,
+    charTimestamp: null,
+    isAnimationDelayActive: true,
   }),
   mounted() {
-    this.planToAnimateSymbol();
+    setTimeout(() => {
+      this.isAnimationDelayActive = false;
+      this.planToAnimateChar();
+    }, this.startingAnimationDelay);
   },
   methods: {
-    planToAnimateSymbol() {
-      this.symbolAnimationIndex =
-        !this.symbolTimestamp && !this.symbolAnimationIndex ? 0 : this.symbolAnimationIndex + 1;
-      if (this.symbolAnimationIndex > this.stringToAnimate.length) {
+    planToAnimateChar() {
+      const isFirstRender = !this.charTimestamp && !this.charAnimationIndex;
+
+      this.charAnimationIndex = isFirstRender ? 0 : this.charAnimationIndex;
+      this.charTimestamp = Date.now();
+
+      if (this.charAnimationIndex >= this.animationString.length) {
         this.$emit("string-animation-complete");
         return;
       }
-      this.symbolTimestamp = Date.now();
-      this.animateSymbol();
-    },
-    animateSymbol() {
-      setTimeout(() => {
-        const randomString = [...Array(this.stringToAnimate.length - this.symbolAnimationIndex)].map(
-          () => this.symbolsPool[Math.floor(Math.random() * this.symbolsPool.length)]
-        );
-        this.renderedSymbols = this.stringToAnimate.substring(0, this.symbolAnimationIndex) + randomString.join("");
 
-        Date.now() - this.symbolTimestamp < this.symbolAnimationDuration
-          ? this.animateSymbol()
-          : (this.planToAnimateSymbol(), this.$emit("symbol-animation-complete", this.symbolAnimationIndex));
-      }, this.symbolUpdateDelay);
+      this.animateChar();
+    },
+    animateChar() {
+      setTimeout(() => {
+        const animationDurationNotExceeded =
+          Date.now() - this.charTimestamp < this.charAnimationDuration;
+        const randomString = [
+          ...Array(this.animationString.length - this.charAnimationIndex),
+        ].map(
+          () =>
+            this.charsPool[Math.floor(Math.random() * this.charsPool.length)]
+        );
+        this.renderedChars =
+          this.animationString.substring(0, this.charAnimationIndex) +
+          randomString.join("");
+
+        if (animationDurationNotExceeded) {
+          this.animateChar();
+        } else {
+          this.$emit("char-animation-complete", {
+            index: this.charAnimationIndex,
+            char: this.animationString[this.charAnimationIndex],
+          });
+          this.charAnimationIndex += 1;
+          this.planToAnimateChar();
+        }
+      }, this.charUpdateDelay);
     },
   },
 };

@@ -5,29 +5,25 @@
   "license": "MIT",
   "repository": "liutkin/vue-animate-shuffle",
   "author": {
-		"name": "Vladimir Liutkin",
-		"email": "vladimir@liutkin.com"
-	},
-
+    "name": "Vladimir Liutkin",
+    "email": "vladimir@liutkin.com"
+  },
   "main": "dist/animate-shuffle.ssr.js",
   "browser": "dist/animate-shuffle.esm.js",
   "module": "dist/animate-shuffle.esm.js",
   "unpkg": "dist/animate-shuffle.min.js",
-
   "keywords": [
-		"vue",
-		"vuejs",
-		"animation",
-		"shuffle",
-		"component",
-		"plugin"
-	],
-
+    "vue",
+    "vuejs",
+    "animation",
+    "shuffle",
+    "component",
+    "plugin"
+  ],
   "files": [
     "dist/*",
     "src/**/*.vue"
   ],
-
   "scripts": {
     "serve": "vue-cli-service serve dev/serve.js",
     "build": "cross-env NODE_ENV=production rollup --config build/rollup.config.js",
@@ -35,10 +31,7 @@
     "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife"
   },
-
-  "dependencies": {
-  },
-
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
