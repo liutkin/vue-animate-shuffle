@@ -1,6 +1,6 @@
 {
   "name": "vue-animate-shuffle",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Play shuffle animation for given string 🎬",
   "license": "MIT",
   "repository": "liutkin/vue-animate-shuffle",
