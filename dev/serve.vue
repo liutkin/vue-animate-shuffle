@@ -9,7 +9,7 @@
       char-animation-complete-class="color-turquoise animate-rubber-band"
       :starting-animation-delay="1000"
       @char-animation-complete="item => animationCompleteItems.push(item)"
-      @string-animation-complete="() => (isAnimationComplete = true)"
+      @string-animation-complete="stringAnimationComplete"
       >Delay placeholder</animate-shuffle
     >
     <ul>
@@ -21,7 +21,8 @@
     </ul>
     <h3 v-if="isAnimationComplete" class="flex">
       <div class="flex items-center">
-        <span class="animate-rubber-band">🎉</span>Animation complete
+        <span class="animate-rubber-band">🎉</span>Animation complete ・
+        Rendered string: <span v-text="`\xa0${renderedString}`" />
       </div>
     </h3>
   </div>
@@ -39,7 +40,14 @@ export default Vue.extend({
   data: () => ({
     animationCompleteItems: [],
     isAnimationComplete: false,
+    renderedString: null,
   }),
+  methods: {
+    stringAnimationComplete({ renderedString }) {
+      this.isAnimationComplete = true;
+      this.renderedString = renderedString;
+    },
+  },
 });
 </script>
 

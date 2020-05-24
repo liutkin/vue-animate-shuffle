@@ -108,7 +108,7 @@ var script = {
   },
   data: function data() {
     return {
-      renderedChars: "",
+      renderedString: "",
       charAnimationIndex: null,
       charTimestamp: null,
       isAnimationDelayActive: true
@@ -126,7 +126,9 @@ var script = {
   methods: {
     planToAnimateChar: function planToAnimateChar() {
       if (this.charAnimationIndex > this.animationString.length) {
-        this.$emit("string-animation-complete");
+        this.$emit("string-animation-complete", {
+          renderedString: this.renderedString
+        });
         return;
       }
 
@@ -145,7 +147,7 @@ var script = {
           return _this2.charsPool[Math.floor(Math.random() * _this2.charsPool.length)];
         });
 
-        _this2.renderedChars = _this2.animationString.substring(0, _this2.charAnimationIndex) + randomString.join("");
+        _this2.renderedString = _this2.animationString.substring(0, _this2.charAnimationIndex) + randomString.join("");
 
         if (animationDurationNotExceeded) {
           _this2.animateChar();
@@ -250,7 +252,7 @@ var __vue_render__ = function __vue_render__() {
 
   return _c(_vm.containerElementTag, {
     tag: "component"
-  }, [_vm.isAnimationDelayActive ? _vm._t("default") : _vm._l(_vm.renderedChars.split(''), function (char, index) {
+  }, [_vm.isAnimationDelayActive ? _vm._t("default") : _vm._l(_vm.renderedString.split(''), function (char, index) {
     return _c(_vm.charElementTag, {
       key: index,
       tag: "component",
@@ -271,7 +273,7 @@ var __vue_inject_styles__ = undefined;
 var __vue_scope_id__ = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = "data-v-48e0c730";
+var __vue_module_identifier__ = "data-v-18128b5e";
 /* functional template */
 
 var __vue_is_functional_template__ = false;

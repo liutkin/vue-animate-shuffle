@@ -70,7 +70,7 @@ var script = {
     }
   },
   data: () => ({
-    renderedChars: "",
+    renderedString: "",
     charAnimationIndex: null,
     charTimestamp: null,
     isAnimationDelayActive: true
@@ -86,7 +86,9 @@ var script = {
   methods: {
     planToAnimateChar() {
       if (this.charAnimationIndex > this.animationString.length) {
-        this.$emit("string-animation-complete");
+        this.$emit("string-animation-complete", {
+          renderedString: this.renderedString
+        });
         return;
       }
 
@@ -100,7 +102,7 @@ var script = {
       setTimeout(() => {
         const animationDurationNotExceeded = Date.now() - this.charTimestamp < this.charAnimationDuration && this.charAnimationIndex < this.animationString.length;
         const randomString = [...Array(this.animationString.length - this.charAnimationIndex)].map(() => this.charsPool[Math.floor(Math.random() * this.charsPool.length)]);
-        this.renderedChars = this.animationString.substring(0, this.charAnimationIndex) + randomString.join("");
+        this.renderedString = this.animationString.substring(0, this.charAnimationIndex) + randomString.join("");
 
         if (animationDurationNotExceeded) {
           this.animateChar();
@@ -209,7 +211,7 @@ var __vue_render__ = function () {
 
   return _c(_vm.containerElementTag, {
     tag: "component"
-  }, [_vm.isAnimationDelayActive ? _vm._t("default") : _vm._l(_vm.renderedChars.split(''), function (char, index) {
+  }, [_vm.isAnimationDelayActive ? _vm._t("default") : _vm._l(_vm.renderedString.split(''), function (char, index) {
     return _c(_vm.charElementTag, {
       key: index,
       tag: "component",

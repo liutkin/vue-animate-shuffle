@@ -4,7 +4,7 @@
     <component
       v-else
       :is="charElementTag"
-      v-for="(char, index) in renderedChars.split('')"
+      v-for="(char, index) in renderedString.split('')"
       :key="index"
       :class="
         index < charAnimationIndex
@@ -79,7 +79,7 @@ export default {
     },
   },
   data: () => ({
-    renderedChars: "",
+    renderedString: "",
     charAnimationIndex: null,
     charTimestamp: null,
     isAnimationDelayActive: true,
@@ -93,7 +93,9 @@ export default {
   methods: {
     planToAnimateChar() {
       if (this.charAnimationIndex > this.animationString.length) {
-        this.$emit("string-animation-complete");
+        this.$emit("string-animation-complete", {
+          renderedString: this.renderedString,
+        });
         return;
       }
       const isFirstRender = !this.charTimestamp && !this.charAnimationIndex;
@@ -114,7 +116,7 @@ export default {
           () =>
             this.charsPool[Math.floor(Math.random() * this.charsPool.length)]
         );
-        this.renderedChars =
+        this.renderedString =
           this.animationString.substring(0, this.charAnimationIndex) +
           randomString.join("");
 

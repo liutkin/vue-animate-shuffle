@@ -41,3 +41,10 @@ export default {
 | `char-element-tag`              | `String` | `false`  | `span`  | Tag for char element                                |
 | `char-animation-complete-class` | `String` | `false`  | `""`    | Class that being added upon char animation complete |
 | `char-classs`                   | `String` | `false`  | `""`    | Class for every char element                        |
+
+## Events
+
+| Event                       | Payload                                                            | Description                                |
+| --------------------------- | ------------------------------------------------------------------ | ------------------------------------------ |
+| `char-animation-complete`   | `{ index: <completed char index>, char: <completed char symbol> }` | Called upon char animation complete        |
+| `string-animation-complete` | `{ renderedString: <complete rendered string> }`                   | Called upon all strings have been animated |
