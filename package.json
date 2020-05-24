@@ -1,6 +1,6 @@
 {
   "name": "vue-animate-shuffle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Play shuffle animation for given string 🎬",
   "license": "MIT",
   "repository": "liutkin/vue-animate-shuffle",
@@ -8,10 +8,10 @@
     "name": "Vladimir Liutkin",
     "email": "vladimir@liutkin.com"
   },
-  "main": "dist/animate-shuffle.ssr.js",
-  "browser": "dist/animate-shuffle.esm.js",
-  "module": "dist/animate-shuffle.esm.js",
-  "unpkg": "dist/animate-shuffle.min.js",
+  "main": "dist/vue-animate-shuffle.ssr.js",
+  "browser": "dist/vue-animate-shuffle.esm.js",
+  "module": "dist/vue-animate-shuffle.esm.js",
+  "unpkg": "dist/vue-animate-shuffle.min.js",
   "keywords": [
     "vue",
     "vuejs",

@@ -125,22 +125,21 @@ var script = {
   },
   methods: {
     planToAnimateChar: function planToAnimateChar() {
-      var isFirstRender = !this.charTimestamp && !this.charAnimationIndex;
-      this.charAnimationIndex = isFirstRender ? 0 : this.charAnimationIndex;
-      this.charTimestamp = Date.now();
-
-      if (this.charAnimationIndex >= this.animationString.length) {
+      if (this.charAnimationIndex > this.animationString.length) {
         this.$emit("string-animation-complete");
         return;
       }
 
+      var isFirstRender = !this.charTimestamp && !this.charAnimationIndex;
+      this.charAnimationIndex = isFirstRender ? 0 : this.charAnimationIndex;
+      this.charTimestamp = Date.now();
       this.animateChar();
     },
     animateChar: function animateChar() {
       var _this2 = this;
 
       setTimeout(function () {
-        var animationDurationNotExceeded = Date.now() - _this2.charTimestamp < _this2.charAnimationDuration;
+        var animationDurationNotExceeded = Date.now() - _this2.charTimestamp < _this2.charAnimationDuration && _this2.charAnimationIndex < _this2.animationString.length;
 
         var randomString = _toConsumableArray(Array(_this2.animationString.length - _this2.charAnimationIndex)).map(function () {
           return _this2.charsPool[Math.floor(Math.random() * _this2.charsPool.length)];
@@ -151,10 +150,12 @@ var script = {
         if (animationDurationNotExceeded) {
           _this2.animateChar();
         } else {
-          _this2.$emit("char-animation-complete", {
-            index: _this2.charAnimationIndex,
-            char: _this2.animationString[_this2.charAnimationIndex]
-          });
+          if (_this2.charAnimationIndex < _this2.animationString.length) {
+            _this2.$emit("char-animation-complete", {
+              index: _this2.charAnimationIndex,
+              char: _this2.animationString[_this2.charAnimationIndex]
+            });
+          }
 
           _this2.charAnimationIndex += 1;
 
@@ -270,7 +271,7 @@ var __vue_inject_styles__ = undefined;
 var __vue_scope_id__ = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = "data-v-db327cd4";
+var __vue_module_identifier__ = "data-v-48e0c730";
 /* functional template */
 
 var __vue_is_functional_template__ = false;
@@ -288,7 +289,7 @@ var __vue_component__ = /*#__PURE__*/normalizeComponent({
 var install = function installAnimateShuffle(Vue) {
   if (install.installed) return;
   install.installed = true;
-  Vue.component('AnimateShuffle', __vue_component__);
+  Vue.component("AnimateShuffle", __vue_component__);
 }; // Create module definition for Vue.use()
 
 
@@ -302,9 +303,9 @@ var plugin = {
 {
   var GlobalVue = null;
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     GlobalVue = window.Vue;
-  } else if (typeof global !== 'undefined') {
+  } else if (typeof global !== "undefined") {
     GlobalVue = global.Vue;
   }
 

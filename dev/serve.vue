@@ -29,7 +29,7 @@
 
 <script>
 import Vue from "vue";
-import AnimateShuffle from "@/animate-shuffle.vue";
+import AnimateShuffle from "@/AnimateShuffle.vue";
 
 export default Vue.extend({
   name: "ServeDev",

@@ -92,22 +92,22 @@ export default {
   },
   methods: {
     planToAnimateChar() {
+      if (this.charAnimationIndex > this.animationString.length) {
+        this.$emit("string-animation-complete");
+        return;
+      }
       const isFirstRender = !this.charTimestamp && !this.charAnimationIndex;
 
       this.charAnimationIndex = isFirstRender ? 0 : this.charAnimationIndex;
       this.charTimestamp = Date.now();
-
-      if (this.charAnimationIndex >= this.animationString.length) {
-        this.$emit("string-animation-complete");
-        return;
-      }
 
       this.animateChar();
     },
     animateChar() {
       setTimeout(() => {
         const animationDurationNotExceeded =
-          Date.now() - this.charTimestamp < this.charAnimationDuration;
+          Date.now() - this.charTimestamp < this.charAnimationDuration &&
+          this.charAnimationIndex < this.animationString.length;
         const randomString = [
           ...Array(this.animationString.length - this.charAnimationIndex),
         ].map(
@@ -121,10 +121,12 @@ export default {
         if (animationDurationNotExceeded) {
           this.animateChar();
         } else {
-          this.$emit("char-animation-complete", {
-            index: this.charAnimationIndex,
-            char: this.animationString[this.charAnimationIndex],
-          });
+          if (this.charAnimationIndex < this.animationString.length) {
+            this.$emit("char-animation-complete", {
+              index: this.charAnimationIndex,
+              char: this.animationString[this.charAnimationIndex],
+            });
+          }
           this.charAnimationIndex += 1;
           this.planToAnimateChar();
         }

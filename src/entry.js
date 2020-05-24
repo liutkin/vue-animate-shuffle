@@ -1,11 +1,11 @@
 // Import vue component
-import component from '@/animate-shuffle.vue';
+import component from "@/AnimateShuffle.vue";
 
 // install function executed by Vue.use()
 const install = function installAnimateShuffle(Vue) {
   if (install.installed) return;
   install.installed = true;
-  Vue.component('AnimateShuffle', component);
+  Vue.component("AnimateShuffle", component);
 };
 
 // Create module definition for Vue.use()
@@ -16,11 +16,11 @@ const plugin = {
 // To auto-install on non-es builds, when vue is found
 // eslint-disable-next-line no-redeclare
 /* global window, global */
-if ('false' === process.env.ES_BUILD) {
+if ("false" === process.env.ES_BUILD) {
   let GlobalVue = null;
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     GlobalVue = window.Vue;
-  } else if (typeof global !== 'undefined') {
+  } else if (typeof global !== "undefined") {
     GlobalVue = global.Vue;
   }
   if (GlobalVue) {
