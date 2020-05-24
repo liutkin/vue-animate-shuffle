@@ -1,6 +1,6 @@
 <template>
   <component :is="containerElementTag">
-    <slot v-if="isAnimationDelayActive" />
+    <slot v-if="isAnimationDelayActive && !disabled" />
     <component
       v-else
       :is="charElementTag"
@@ -77,18 +77,23 @@ export default {
       type: String,
       default: "",
     },
+
+    // Disable animation
+    disabled: Boolean,
   },
   data: () => ({
     renderedString: "",
     charAnimationIndex: null,
     charTimestamp: null,
-    isAnimationDelayActive: true,
+    isAnimationDelayActive: null,
   }),
+  watch: {
+    disabled() {
+      this.reset();
+    },
+  },
   mounted() {
-    setTimeout(() => {
-      this.isAnimationDelayActive = false;
-      this.planToAnimateChar();
-    }, this.startingAnimationDelay);
+    this.reset();
   },
   methods: {
     planToAnimateChar() {
@@ -107,6 +112,10 @@ export default {
     },
     animateChar() {
       setTimeout(() => {
+        if (this.disabled) {
+          this.reset();
+          return;
+        }
         const animationDurationNotExceeded =
           Date.now() - this.charTimestamp < this.charAnimationDuration &&
           this.charAnimationIndex < this.animationString.length;
@@ -133,6 +142,19 @@ export default {
           this.planToAnimateChar();
         }
       }, this.charUpdateDelay);
+    },
+    reset() {
+      this.charAnimationIndex = null;
+      this.charTimestamp = null;
+      this.isAnimationDelayActive = !this.disabled;
+      this.renderedString = this.disabled ? this.animationString : "";
+
+      if (!this.disabled) {
+        setTimeout(() => {
+          this.isAnimationDelayActive = false;
+          this.planToAnimateChar();
+        }, this.startingAnimationDelay);
+      }
     },
   },
 };

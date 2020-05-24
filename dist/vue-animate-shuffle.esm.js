@@ -67,20 +67,25 @@ var script = {
     charClass: {
       type: String,
       default: ""
-    }
+    },
+    // Disable animation
+    disabled: Boolean
   },
   data: () => ({
     renderedString: "",
     charAnimationIndex: null,
     charTimestamp: null,
-    isAnimationDelayActive: true
+    isAnimationDelayActive: null
   }),
+  watch: {
+    disabled() {
+      this.reset();
+    }
+
+  },
 
   mounted() {
-    setTimeout(() => {
-      this.isAnimationDelayActive = false;
-      this.planToAnimateChar();
-    }, this.startingAnimationDelay);
+    this.reset();
   },
 
   methods: {
@@ -100,6 +105,11 @@ var script = {
 
     animateChar() {
       setTimeout(() => {
+        if (this.disabled) {
+          this.reset();
+          return;
+        }
+
         const animationDurationNotExceeded = Date.now() - this.charTimestamp < this.charAnimationDuration && this.charAnimationIndex < this.animationString.length;
         const randomString = [...Array(this.animationString.length - this.charAnimationIndex)].map(() => this.charsPool[Math.floor(Math.random() * this.charsPool.length)]);
         this.renderedString = this.animationString.substring(0, this.charAnimationIndex) + randomString.join("");
@@ -118,6 +128,20 @@ var script = {
           this.planToAnimateChar();
         }
       }, this.charUpdateDelay);
+    },
+
+    reset() {
+      this.charAnimationIndex = null;
+      this.charTimestamp = null;
+      this.isAnimationDelayActive = !this.disabled;
+      this.renderedString = this.disabled ? this.animationString : "";
+
+      if (!this.disabled) {
+        setTimeout(() => {
+          this.isAnimationDelayActive = false;
+          this.planToAnimateChar();
+        }, this.startingAnimationDelay);
+      }
     }
 
   }
@@ -211,7 +235,7 @@ var __vue_render__ = function () {
 
   return _c(_vm.containerElementTag, {
     tag: "component"
-  }, [_vm.isAnimationDelayActive ? _vm._t("default") : _vm._l(_vm.renderedString.split(''), function (char, index) {
+  }, [_vm.isAnimationDelayActive && !_vm.disabled ? _vm._t("default") : _vm._l(_vm.renderedString.split(''), function (char, index) {
     return _c(_vm.charElementTag, {
       key: index,
       tag: "component",

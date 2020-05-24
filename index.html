@@ -4,10 +4,92 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>vue-animate-shuffle</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/normalize.css/normalize.css"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/@kocktail/css" />
+    <style>
+      body {
+        font-family: Helvetica, sans-serif;
+        color: hsla(0, 0%, 0%, 0.95);
+      }
+
+      @keyframes rubber-band {
+        from {
+          transform: scale3d(1, 1, 1);
+        }
+
+        30% {
+          transform: scale3d(1.25, 0.75, 1);
+        }
+
+        40% {
+          transform: scale3d(0.75, 1.25, 1);
+        }
+
+        50% {
+          transform: scale3d(1.15, 0.85, 1);
+        }
+
+        65% {
+          transform: scale3d(0.95, 1.05, 1);
+        }
+
+        75% {
+          transform: scale3d(1.05, 0.95, 1);
+        }
+
+        to {
+          transform: scale3d(1, 1, 1);
+        }
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .items-center {
+        align-items: center;
+      }
+
+      .color-gray {
+        color: gray;
+      }
+
+      .color-turquoise {
+        color: turquoise;
+      }
+
+      .animate-rubber-band {
+        animation-name: rubber-band;
+        animation-duration: 0.75s;
+        animation-fill-mode: forwards;
+      }
+    </style>
   </head>
   <body>
-    <div id="app">app</div>
+    <div id="app" class="padding-x-3 padding-x-4--md">
+      <animate-shuffle
+        container-element-tag="h1"
+        char-element-tag="div"
+        animation-string="foobar"
+        class="flex"
+        :chars-pool="'abcdefghijklmnopqrstuvwxyz'.split('')"
+        char-animation-complete-class="color-turquoise animate-rubber-band"
+        :starting-animation-delay="1000"
+        >Delay placeholder</animate-shuffle
+      >
+    </div>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-animate-shuffle/dist/vue-animate-shuffle.min.js"></script>
+    <script>
+      new Vue({
+        el: document.querySelector("#app"),
+        data: {
+          isFirstExampleEnabled: false,
+        },
+      });
+    </script>
   </body>
 </html>

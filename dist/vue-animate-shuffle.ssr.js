@@ -104,24 +104,25 @@ var script = {
     charClass: {
       type: String,
       default: ""
-    }
+    },
+    // Disable animation
+    disabled: Boolean
   },
   data: function data() {
     return {
       renderedString: "",
       charAnimationIndex: null,
       charTimestamp: null,
-      isAnimationDelayActive: true
+      isAnimationDelayActive: null
     };
   },
+  watch: {
+    disabled: function disabled() {
+      this.reset();
+    }
+  },
   mounted: function mounted() {
-    var _this = this;
-
-    setTimeout(function () {
-      _this.isAnimationDelayActive = false;
-
-      _this.planToAnimateChar();
-    }, this.startingAnimationDelay);
+    this.reset();
   },
   methods: {
     planToAnimateChar: function planToAnimateChar() {
@@ -138,32 +139,54 @@ var script = {
       this.animateChar();
     },
     animateChar: function animateChar() {
-      var _this2 = this;
+      var _this = this;
 
       setTimeout(function () {
-        var animationDurationNotExceeded = Date.now() - _this2.charTimestamp < _this2.charAnimationDuration && _this2.charAnimationIndex < _this2.animationString.length;
+        if (_this.disabled) {
+          _this.reset();
 
-        var randomString = _toConsumableArray(Array(_this2.animationString.length - _this2.charAnimationIndex)).map(function () {
-          return _this2.charsPool[Math.floor(Math.random() * _this2.charsPool.length)];
+          return;
+        }
+
+        var animationDurationNotExceeded = Date.now() - _this.charTimestamp < _this.charAnimationDuration && _this.charAnimationIndex < _this.animationString.length;
+
+        var randomString = _toConsumableArray(Array(_this.animationString.length - _this.charAnimationIndex)).map(function () {
+          return _this.charsPool[Math.floor(Math.random() * _this.charsPool.length)];
         });
 
-        _this2.renderedString = _this2.animationString.substring(0, _this2.charAnimationIndex) + randomString.join("");
+        _this.renderedString = _this.animationString.substring(0, _this.charAnimationIndex) + randomString.join("");
 
         if (animationDurationNotExceeded) {
-          _this2.animateChar();
+          _this.animateChar();
         } else {
-          if (_this2.charAnimationIndex < _this2.animationString.length) {
-            _this2.$emit("char-animation-complete", {
-              index: _this2.charAnimationIndex,
-              char: _this2.animationString[_this2.charAnimationIndex]
+          if (_this.charAnimationIndex < _this.animationString.length) {
+            _this.$emit("char-animation-complete", {
+              index: _this.charAnimationIndex,
+              char: _this.animationString[_this.charAnimationIndex]
             });
           }
 
-          _this2.charAnimationIndex += 1;
+          _this.charAnimationIndex += 1;
 
-          _this2.planToAnimateChar();
+          _this.planToAnimateChar();
         }
       }, this.charUpdateDelay);
+    },
+    reset: function reset() {
+      var _this2 = this;
+
+      this.charAnimationIndex = null;
+      this.charTimestamp = null;
+      this.isAnimationDelayActive = !this.disabled;
+      this.renderedString = this.disabled ? this.animationString : "";
+
+      if (!this.disabled) {
+        setTimeout(function () {
+          _this2.isAnimationDelayActive = false;
+
+          _this2.planToAnimateChar();
+        }, this.startingAnimationDelay);
+      }
     }
   }
 };function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
@@ -252,7 +275,7 @@ var __vue_render__ = function __vue_render__() {
 
   return _c(_vm.containerElementTag, {
     tag: "component"
-  }, [_vm.isAnimationDelayActive ? _vm._t("default") : _vm._l(_vm.renderedString.split(''), function (char, index) {
+  }, [_vm.isAnimationDelayActive && !_vm.disabled ? _vm._t("default") : _vm._l(_vm.renderedString.split(''), function (char, index) {
     return _c(_vm.charElementTag, {
       key: index,
       tag: "component",
@@ -273,7 +296,7 @@ var __vue_inject_styles__ = undefined;
 var __vue_scope_id__ = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = "data-v-18128b5e";
+var __vue_module_identifier__ = "data-v-30b2fd17";
 /* functional template */
 
 var __vue_is_functional_template__ = false;

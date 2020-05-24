@@ -1,10 +1,16 @@
 <template>
-  <div id="app" class="color-gray">
+  <div id="app">
+    <button
+      type="button"
+      @click="isAnimationDisabled = !isAnimationDisabled"
+      v-text="isAnimationDisabled ? 'Enable' : 'Disable'"
+    />
     <animate-shuffle
+      :disabled="isAnimationDisabled"
       container-element-tag="h1"
       char-element-tag="div"
       animation-string="foobar"
-      class="flex"
+      class="flex color-gray"
       :chars-pool="'abcdefghijklmnopqrstuvwxyz'.split('')"
       char-animation-complete-class="color-turquoise animate-rubber-band"
       :starting-animation-delay="1000"
@@ -41,7 +47,13 @@ export default Vue.extend({
     animationCompleteItems: [],
     isAnimationComplete: false,
     renderedString: null,
+    isAnimationDisabled: false,
   }),
+  watch: {
+    disabled(newValue) {
+      newValue && this.$forceUpdate();
+    },
+  },
   methods: {
     stringAnimationComplete({ renderedString }) {
       this.isAnimationComplete = true;
