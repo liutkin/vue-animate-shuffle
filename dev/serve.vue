@@ -9,9 +9,9 @@
       :disabled="isAnimationDisabled"
       container-element-tag="h1"
       char-element-tag="div"
-      animation-string="foobar"
-      class="flex color-gray"
-      :chars-pool="'abcdefghijklmnopqrstuvwxyz'.split('')"
+      animation-string="foo bar"
+      class="flex color-gray text-pre"
+      chars-pool="abcdefghijklmnopqrstuvwxyz"
       char-animation-complete-class="color-turquoise animate-rubber-band"
       :starting-animation-delay="1000"
       @char-animation-complete="item => animationCompleteItems.push(item)"
@@ -114,5 +114,9 @@ export default Vue.extend({
   animation-name: rubber-band;
   animation-duration: 0.75s;
   animation-fill-mode: forwards;
+}
+
+.text-pre {
+  white-space: pre;
 }
 </style>

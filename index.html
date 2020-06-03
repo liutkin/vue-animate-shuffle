@@ -10,9 +10,37 @@
     />
     <link rel="stylesheet" href="https://unpkg.com/@kocktail/css" />
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px;
+      }
+
       body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: radial-gradient(
+          ellipse at center,
+          rgb(39, 39, 39),
+          #000000
+        );
         font-family: Helvetica, sans-serif;
-        color: hsla(0, 0%, 0%, 0.95);
+        color: hsla(0, 0%, 100%, 0.95);
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      h1 {
+        white-space: pre;
+        font-family: Monaco, Hack, "Fira Code", monospace;
+      }
+
+      a {
+        color: lawngreen;
       }
 
       @keyframes rubber-band {
@@ -57,8 +85,8 @@
         color: gray;
       }
 
-      .color-turquoise {
-        color: turquoise;
+      .color-lawngreen {
+        color: lawngreen;
       }
 
       .animate-rubber-band {
@@ -69,17 +97,22 @@
     </style>
   </head>
   <body>
-    <div id="app" class="padding-x-3 padding-x-4--md">
+    <div id="app" class="padding-x-4 text-center">
+      <div class="font-5xl">😎</div>
       <animate-shuffle
         container-element-tag="h1"
         char-element-tag="div"
-        animation-string="foobar"
-        class="flex"
-        :chars-pool="'abcdefghijklmnopqrstuvwxyz'.split('')"
-        char-animation-complete-class="color-turquoise animate-rubber-band"
-        :starting-animation-delay="1000"
-        >Delay placeholder</animate-shuffle
-      >
+        animation-string="the matrix has you"
+        :chars-pool="'abcdefghijklmnopqrstuvwxyz1234567890'.split('')"
+        :char-animation-duration="300"
+        char-animation-complete-class="color-lawngreen animate-rubber-band"
+        class="flex flex-wrap justify-center items-center"
+      ></animate-shuffle>
+      <span>
+        Shuffle animation component for VueJS. Check out
+        <a href="https://github.com/liutkin/vue-animate-shuffle">GitHub repo</a>
+        for usage.
+      </span>
     </div>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-animate-shuffle/dist/vue-animate-shuffle.min.js"></script>
