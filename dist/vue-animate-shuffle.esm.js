@@ -28,10 +28,9 @@ var script = {
     },
     // Pool of chars for animation tick
     charsPool: {
-      type: Array,
+      type: [Array, String],
       required: true,
-      default: () => [],
-      validator: chars => chars.every(char => typeof char === "string")
+      default: () => []
     },
     // Delay before animation tick for every char
     charUpdateDelay: {
@@ -88,6 +87,9 @@ var script = {
     this.reset();
   },
 
+  computed: {
+    chars: self => Array.isArray(self.charsPool) ? self.charsPool : self.charsPool.split("")
+  },
   methods: {
     planToAnimateChar() {
       if (this.charAnimationIndex > this.animationString.length) {
@@ -111,7 +113,7 @@ var script = {
         }
 
         const animationDurationNotExceeded = Date.now() - this.charTimestamp < this.charAnimationDuration && this.charAnimationIndex < this.animationString.length;
-        const randomString = [...Array(this.animationString.length - this.charAnimationIndex)].map(() => this.charsPool[Math.floor(Math.random() * this.charsPool.length)]);
+        const randomString = [...Array(this.animationString.length - this.charAnimationIndex)].map(() => this.chars[Math.floor(Math.random() * this.chars.length)]);
         this.renderedString = this.animationString.substring(0, this.charAnimationIndex) + randomString.join("");
 
         if (animationDurationNotExceeded) {

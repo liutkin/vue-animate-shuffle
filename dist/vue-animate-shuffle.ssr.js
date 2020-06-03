@@ -59,15 +59,10 @@ var script = {
     },
     // Pool of chars for animation tick
     charsPool: {
-      type: Array,
+      type: [Array, String],
       required: true,
       default: function _default() {
         return [];
-      },
-      validator: function validator(chars) {
-        return chars.every(function (char) {
-          return typeof char === "string";
-        });
       }
     },
     // Delay before animation tick for every char
@@ -124,6 +119,11 @@ var script = {
   mounted: function mounted() {
     this.reset();
   },
+  computed: {
+    chars: function chars(self) {
+      return Array.isArray(self.charsPool) ? self.charsPool : self.charsPool.split("");
+    }
+  },
   methods: {
     planToAnimateChar: function planToAnimateChar() {
       if (this.charAnimationIndex > this.animationString.length) {
@@ -151,7 +151,7 @@ var script = {
         var animationDurationNotExceeded = Date.now() - _this.charTimestamp < _this.charAnimationDuration && _this.charAnimationIndex < _this.animationString.length;
 
         var randomString = _toConsumableArray(Array(_this.animationString.length - _this.charAnimationIndex)).map(function () {
-          return _this.charsPool[Math.floor(Math.random() * _this.charsPool.length)];
+          return _this.chars[Math.floor(Math.random() * _this.chars.length)];
         });
 
         _this.renderedString = _this.animationString.substring(0, _this.charAnimationIndex) + randomString.join("");
@@ -296,7 +296,7 @@ var __vue_inject_styles__ = undefined;
 var __vue_scope_id__ = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = "data-v-30b2fd17";
+var __vue_module_identifier__ = "data-v-3e692a58";
 /* functional template */
 
 var __vue_is_functional_template__ = false;
